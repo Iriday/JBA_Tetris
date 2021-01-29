@@ -7,7 +7,7 @@ def _new(indexes) -> np.array:
     return item.reshape((4, 4))
 
 
-ITEMS = {
+PIECES = {
     "I": np.resize((_new((1, 5, 9, 13)), _new((4, 5, 6, 7))), (4, 4, 4)),
     "J": np.array((_new((2, 6, 9, 10)), _new((4, 5, 6, 10)), _new((1, 2, 5, 9)), _new((0, 4, 5, 6)))),
     "L": np.array((_new((1, 5, 9, 10)), _new((6, 8, 9, 10)), _new((1, 2, 6, 10)), _new((0, 1, 2, 4)))),
