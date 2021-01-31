@@ -40,4 +40,4 @@ def get_action():
 
 
 def show_game_filed(filed):
-    print(format_piece_or_filed(filed))
+    print(format_piece_or_filed(filed), end="\n\n")
