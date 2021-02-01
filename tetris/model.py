@@ -14,6 +14,7 @@ class Model:
     def __init__(self, dimensions):
         self.field_width, self.field_height = dimensions
         self.game_filed = np.zeros((self.field_height, self.field_width), dtype=np.int8)
+        self.empty_piece = np.zeros((4, 4))
 
     def start_round(self, piece_name):  # temp
         self.curr_piece_name = piece_name
@@ -28,7 +29,18 @@ class Model:
     def place_piece(self, indexes, piece):
         self.game_filed.put(indexes, piece, mode='clip')
 
-    def perform_action(self, action):
-        if action == Action.ROTATE:
+    def move_piece(self, action):
+        def rotate():
             self.curr_piece_index = (self.curr_piece_index + 1) % 4
             self.place_piece(self.curr_piece_coords, PIECES[self.curr_piece_name][self.curr_piece_index])
+
+        def down():
+            self.place_piece(self.curr_piece_coords, self.empty_piece)
+            self.curr_piece_coords += self.field_width
+            self.place_piece(self.curr_piece_coords, PIECES[self.curr_piece_name][self.curr_piece_index])
+
+        if action == Action.ROTATE:
+            down()
+            rotate()
+        elif action == Action.DOWN:
+            down()
