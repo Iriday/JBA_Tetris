@@ -32,15 +32,34 @@ class Model:
     def move_piece(self, action):
         def rotate():
             self.curr_piece_index = (self.curr_piece_index + 1) % 4
-            self.place_piece(self.curr_piece_coords, PIECES[self.curr_piece_name][self.curr_piece_index])
 
         def down():
-            self.place_piece(self.curr_piece_coords, self.empty_piece)
             self.curr_piece_coords += self.field_width
-            self.place_piece(self.curr_piece_coords, PIECES[self.curr_piece_name][self.curr_piece_index])
+
+        def left():
+            cols = self.curr_piece_coords[0:1, 0:4].flatten() % self.field_width == 0
+            if np.any(cols):
+                self.curr_piece_coords[:, cols] += self.field_width
+            self.curr_piece_coords -= 1
+
+        def right():
+            self.curr_piece_coords += 1
+            cols = self.curr_piece_coords[0:1, 0:4].flatten() % self.field_width == 0
+            if np.any(cols):
+                self.curr_piece_coords[:, cols] -= self.field_width
+
+        self.place_piece(self.curr_piece_coords, self.empty_piece)  # remove previous piece
 
         if action == Action.ROTATE:
             down()
             rotate()
         elif action == Action.DOWN:
             down()
+        elif action == Action.LEFT:
+            down()
+            left()
+        elif action == Action.RIGHT:
+            down()
+            right()
+
+        self.place_piece(self.curr_piece_coords, PIECES[self.curr_piece_name][self.curr_piece_index])
