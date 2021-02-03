@@ -8,6 +8,10 @@ class Action(Enum):
     LEFT = auto()
     RIGHT = auto()
     DOWN = auto()
+    W = ROTATE
+    A = LEFT
+    D = RIGHT
+    S = DOWN
 
 
 class Model:
