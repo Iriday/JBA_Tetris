@@ -39,5 +39,5 @@ def get_action():
         print(f"Error: Unknown action (choose from: {', '.join(m.Action.__members__)}).")
 
 
-def show_game_filed(filed):
+def show_game_field(filed):
     print(format_piece_or_filed(filed), end="\n\n")
