@@ -32,14 +32,12 @@ def get_action():
     while True:
         action = input("action: ").strip().upper()
 
-        if action == "PIECE":  # temp
-            return get_piece_name()  # temp
-        elif action == "BREAK" or action == "EXIT":
+        if action == "EXIT":
             return action
         elif action in m.Action.__members__:
             return m.Action[action]
 
-        print(f"Error: Unknown action (choose from: {', '.join(m.Action.__members__)}).")
+        print(f"Error: Unknown action (choose from: {', '.join(m.Action.__members__)}, EXIT).")
 
 
 def show_game_field(filed):

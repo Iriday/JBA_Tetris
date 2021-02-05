@@ -1,6 +1,7 @@
 import numpy as np
 from enum import Enum, auto
 from pieces import PIECES
+import random
 
 
 class Action(Enum):
@@ -15,14 +16,18 @@ class Action(Enum):
 
 
 class Model:
+    __PIECE_NAMES = tuple(PIECES.keys())
+
     def __init__(self, dimensions):
         self.field_width = dimensions[0] + 2  # +2 walls
         self.field_height = dimensions[1] + 1  # + floor
         self.game_field = Model.__create_game_field(self.field_width, self.field_height)
+        self.__piece_frozen = True
+        self.rand = random.Random()
 
-    def start_round(self, piece_name):  # temp
+    def __start_round(self, piece_name, piece_state):  # temp
         self.__piece_name = piece_name
-        self.__piece_state = 0
+        self.__piece_state = piece_state
         self.__piece_offset = 0
         self.__adjust_indexes = lambda: Model.__adjust_piece_indexes(
             PIECES[self.__piece_name][self.__piece_state].copy(),
@@ -30,11 +35,14 @@ class Model:
         self.__piece_indexes = self.__adjust_indexes()
         self.__piece_frozen = False
 
-        if self.__game_over():
-            return False
+        game_over = self.__game_over()
 
         Model.__draw_piece(self.game_field, self.__piece_indexes, 1)  # place piece at start pos
-        return True
+
+        return not game_over
+
+    def start_round(self):
+        return self.__start_round(self.rand.choice(Model.__PIECE_NAMES), self.rand.randint(0, 3))  # chose random piece
 
     def move_piece(self, action):
         if self.__piece_frozen:
@@ -84,10 +92,16 @@ class Model:
 
         Model.__draw_piece(self.game_field, self.__piece_indexes, 1)
 
+        if self.round_ended():
+            self.__break()  # clear row(s) if filled
+
     def get_game_field(self):
         return self.game_field[0:self.field_height - 1, 1:self.field_width - 1]
 
-    def break_(self):
+    def round_ended(self):
+        return self.__piece_frozen
+
+    def __break(self):
         i = len(self.game_field) - 2
         while i >= 0:
             if np.all(self.game_field[i]):
@@ -97,7 +111,7 @@ class Model:
             i -= 1
 
     def __game_over(self):
-        return self.__collision_detected(self.game_field, self.__piece_indexes)
+        return self.__collision_detected(self.game_field[0:4, :], self.__piece_indexes)
 
     # Static methods ------------------
     @staticmethod
