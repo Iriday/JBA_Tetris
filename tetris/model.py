@@ -28,7 +28,12 @@ class Model:
                                                                     self.piece_offset, self.field_width)
         self.piece_indexes = self.__adjust_indexes()
         self.piece_frozen = False
+
+        if self.game_over():
+            return False
+
         Model._draw_piece(self.game_field, self.piece_indexes, 1)  # place piece at start pos
+        return True
 
     def move_piece(self, action):
         if self.piece_frozen:
@@ -81,7 +86,10 @@ class Model:
     def get_game_field(self):
         return self.game_field[0:self.field_height - 1, 1:self.field_width - 1]
 
-    def _break(self):
+    def game_over(self):
+        return self._collision_detected(self.game_field, self.piece_indexes)
+
+    def break_(self):
         i = len(self.game_field) - 2
         while i >= 0:
             if np.all(self.game_field[i]):

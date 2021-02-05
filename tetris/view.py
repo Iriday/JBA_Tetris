@@ -31,11 +31,10 @@ def get_dimensions():
 def get_action():
     while True:
         action = input("action: ").strip().upper()
-        if action == "EXIT":
-            exit()
-        elif action == "PIECE":  # temp
+
+        if action == "PIECE":  # temp
             return get_piece_name()  # temp
-        elif action == "BREAK":
+        elif action == "BREAK" or action == "EXIT":
             return action
         elif action in m.Action.__members__:
             return m.Action[action]
@@ -45,3 +44,7 @@ def get_action():
 
 def show_game_field(filed):
     print(format_piece_or_filed(filed), end="\n\n")
+
+
+def show_game_over():
+    print("Game Over!")

@@ -9,10 +9,15 @@ def run():
 
     while True:
         action = v.get_action()
-        if action in PIECES:
-            m.start_round(action)
+        if action == "EXIT":
+            exit()
+        elif action in PIECES:
+            started = m.start_round(action)
+            if not started:
+                v.show_game_over()
+                exit()
         elif action == "BREAK":
-            m._break()
+            m.break_()
         else:
             m.move_piece(action)
         v.show_game_field(m.get_game_field())
