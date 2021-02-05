@@ -81,6 +81,15 @@ class Model:
     def get_game_field(self):
         return self.game_field[0:self.field_height - 1, 1:self.field_width - 1]
 
+    def _break(self):
+        i = len(self.game_field) - 2
+        while i >= 0:
+            if np.all(self.game_field[i]):
+                self.game_field[1:i + 1] = self.game_field[0:i]
+                self.game_field.put(np.arange(1, self.field_width - 1), 0)
+                continue
+            i -= 1
+
     # Static methods ------------------
     @staticmethod
     def _create_game_field(width, height):

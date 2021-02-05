@@ -1,11 +1,21 @@
 import view as v
 import model
+from pieces import PIECES
 
-piece_name = v.get_piece_name()
-m = model.Model(v.get_dimensions())
-v.show_game_field(m.get_game_field())  # show empty field
-m.start_round(piece_name)
 
-while True:
-    v.show_game_field(m.get_game_field())
-    m.move_piece(v.get_action())
+def run():
+    m = model.Model(v.get_dimensions())
+    v.show_game_field(m.get_game_field())  # show empty field
+
+    while True:
+        action = v.get_action()
+        if action in PIECES:
+            m.start_round(action)
+        elif action == "BREAK":
+            m._break()
+        else:
+            m.move_piece(action)
+        v.show_game_field(m.get_game_field())
+
+
+run()
