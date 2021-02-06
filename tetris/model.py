@@ -9,10 +9,12 @@ class Action(Enum):
     LEFT = auto()
     RIGHT = auto()
     DOWN = auto()
+    DROP = auto()
     W = ROTATE
     A = LEFT
     D = RIGHT
     S = DOWN
+    SS = DROP
 
 
 class Model:
@@ -30,8 +32,7 @@ class Model:
         self.__piece_state = piece_state
         self.__piece_offset = 0
         self.__adjust_indexes = lambda: Model.__adjust_piece_indexes(
-            PIECES[self.__piece_name][self.__piece_state].copy(),
-            self.__piece_offset, self.field_width)
+            PIECES[self.__piece_name][self.__piece_state].copy(), self.__piece_offset, self.field_width)
         self.__piece_indexes = self.__adjust_indexes()
         self.__piece_frozen = False
 
@@ -59,8 +60,13 @@ class Model:
             self.__piece_indexes += self.field_width
             if Model.__collision_detected(self.game_field, self.__piece_indexes):  # revert piece move
                 self.__piece_indexes -= self.field_width
-                return
+                return False
             self.__piece_offset += self.field_width
+            return True
+
+        def drop():
+            while down():
+                pass
 
         def left():
             self.__piece_indexes -= 1
@@ -84,7 +90,10 @@ class Model:
             left()
         elif action == Action.RIGHT:
             right()
-        down()  # also if action == Action.DOWN:
+        elif action == Action.DROP:
+            drop()
+        if action != Action.DROP:
+            down()
 
         # froze piece if it hit the floor
         if Model.__collision_detected(self.game_field, self.__piece_indexes + self.field_width):
